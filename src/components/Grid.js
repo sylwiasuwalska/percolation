@@ -5,6 +5,7 @@ class Grid extends React.Component {
 	constructor() {
 		super();
 		this.state = { values: {} };
+		this.finished = false;
 	}
 
 	initializeValueArray = () => {
@@ -28,13 +29,19 @@ class Grid extends React.Component {
 			let keysOfClosedCells = Object.keys(cellsOfRow).filter(
 				key => cellsOfRow[key] === 0
 			);
-			if (keysOfClosedCells.length < 0) continue;
+			if (keysOfClosedCells.length === 0 && i === rowsKeys.length - 1) {
+				this.finished = true;
+				break;
+			}
+			if (keysOfClosedCells.length == 0) continue;
+
 			let randomClosedCell =
 				keysOfClosedCells[
 					this.getRandomFromRange(0, keysOfClosedCells.length - 1)
 				];
 
 			let newStateValues = this.state.values;
+
 			newStateValues[rowKey][randomClosedCell] = 1;
 			this.setState({ values: newStateValues });
 			return;
@@ -49,9 +56,24 @@ class Grid extends React.Component {
 		}
 		return array;
 	};
+	checkIfOpen = () => {
+		return false;
+	};
+	checkIfDone = () => {
+		if (this.checkIfOpen() || this.finished) {
+			console.log("Sukces!");
+		} else {
+			setTimeout(
+				function() {
+					this.changeValueOfRandomCell();
+					this.checkIfDone();
+				}.bind(this),
+				100
+			);
+		}
+	};
 	iterateAndOpenNext = () => {
-		this.changeValueOfRandomCell();
-		// checkIfOpen...
+		this.checkIfDone();
 	};
 
 	drawSquare = (index, val) => {
@@ -84,10 +106,7 @@ class Grid extends React.Component {
 						);
 					});
 				})}
-				<button
-					className="button"
-					onClick={this.changeValueOfRandomCell}
-				>
+				<button className="button" onClick={this.iterateAndOpenNext}>
 					Start
 				</button>
 			</div>
