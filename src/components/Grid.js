@@ -1,10 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-
+import Rectangle from "./Rectangle.js";
 class Grid extends React.Component {
 	constructor() {
 		super();
 		this.state = { values: {} };
+		this.connections = [];
 		this.finished = false;
 	}
 
@@ -92,6 +93,11 @@ class Grid extends React.Component {
 	};
 	componentDidMount() {
 		this.initializeValueArray();
+		let rect = new Rectangle();
+		rect.height = 10;
+		rect.width = 15;
+		this.connections.push(rect);
+		console.log(JSON.stringify(this.connections));
 	}
 	render() {
 		var x = -1;
