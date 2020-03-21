@@ -7,7 +7,7 @@ body {
 	padding: 0;
 	width: 600px;
 	height: 600px;
-	border: 1px solid red;
+	text-align: center;
 }
 
 .square {
@@ -17,4 +17,8 @@ body {
 	margin: 0;
 	width: 10%;
 	height: 10%;
+}
+
+.button {
+	margin-top: 5%;
 }

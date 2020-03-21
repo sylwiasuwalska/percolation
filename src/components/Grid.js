@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import Rectangle from "./Rectangle.js";
 class Grid extends React.Component {
 	constructor() {
@@ -19,9 +18,21 @@ class Grid extends React.Component {
 		}
 		this.setState({ values: newValues });
 	};
+
 	getRandomFromRange = (min, max) => {
 		return Math.round(Math.random() * (max - min) + min);
 	};
+
+	shuffleArray = array => {
+		for (var i = array.length - 1; i > 0; i--) {
+			var j = Math.floor(Math.random() * (i + 1));
+			var temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	};
+
 	changeValueOfRandomCell = () => {
 		let rowsKeys = this.shuffleArray(Object.keys(this.state.values));
 		for (let i = 0; i < rowsKeys.length; i++) {
@@ -34,7 +45,7 @@ class Grid extends React.Component {
 				this.finished = true;
 				break;
 			}
-			if (keysOfClosedCells.length == 0) continue;
+			if (keysOfClosedCells.length === 0) continue;
 
 			let randomClosedCell =
 				keysOfClosedCells[
@@ -48,18 +59,11 @@ class Grid extends React.Component {
 			return;
 		}
 	};
-	shuffleArray = array => {
-		for (var i = array.length - 1; i > 0; i--) {
-			var j = Math.floor(Math.random() * (i + 1));
-			var temp = array[i];
-			array[i] = array[j];
-			array[j] = temp;
-		}
-		return array;
-	};
+
 	checkIfOpen = () => {
 		return false;
 	};
+
 	checkIfDone = () => {
 		if (this.checkIfOpen() || this.finished) {
 			console.log("Sukces!");
@@ -69,17 +73,18 @@ class Grid extends React.Component {
 					this.changeValueOfRandomCell();
 					this.checkIfDone();
 				}.bind(this),
-				100
+				150
 			);
 		}
 	};
+
 	iterateAndOpenNext = () => {
 		this.checkIfDone();
 	};
 
 	drawSquare = (index, val) => {
 		let color = "#6c5aa6";
-		val == 1 ? (color = "#f36e62") : (color = "#6c5aa6");
+		val === 1 ? (color = "#f36e62") : (color = "#6c5aa6");
 		return (
 			<div
 				className="square"
@@ -112,7 +117,10 @@ class Grid extends React.Component {
 						);
 					});
 				})}
-				<button className="button" onClick={this.iterateAndOpenNext}>
+				<button
+					className="button btn btn-success btn-block"
+					onClick={this.iterateAndOpenNext}
+				>
 					Start
 				</button>
 			</div>
