@@ -1,1 +1,1 @@
-https://sylwiasuwalska.github.io/percolation percolation
+https://sylwiasuwalska.github.io/percolation
