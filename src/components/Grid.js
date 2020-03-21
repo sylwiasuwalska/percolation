@@ -3,7 +3,7 @@ import Rectangle from "./Rectangle.js";
 class Grid extends React.Component {
 	constructor() {
 		super();
-		this.state = { values: {} };
+		this.state = { values: {}, parents: {} };
 		this.connections = [];
 		this.finished = false;
 	}
@@ -17,6 +17,17 @@ class Grid extends React.Component {
 			}
 		}
 		this.setState({ values: newValues });
+	};
+
+	initializeParentsArray = () => {
+		let newValues = {};
+		for (let i = 0; i < 10; i++) {
+			newValues[i] = {};
+			for (let j = 0; j < 10; j++) {
+				newValues[i][j] = `${i}.${j}`;
+			}
+		}
+		this.setState({ parents: newValues });
 	};
 
 	getRandomFromRange = (min, max) => {
@@ -55,6 +66,10 @@ class Grid extends React.Component {
 			let newStateValues = this.state.values;
 
 			newStateValues[rowKey][randomClosedCell] = 1;
+			//1. Check if neighbours are open
+
+			//2. Change cell's parent if neighbour is opened
+
 			this.setState({ values: newStateValues });
 			return;
 		}
@@ -73,7 +88,7 @@ class Grid extends React.Component {
 					this.changeValueOfRandomCell();
 					this.checkIfDone();
 				}.bind(this),
-				150
+				200
 			);
 		}
 	};
@@ -98,6 +113,8 @@ class Grid extends React.Component {
 	};
 	componentDidMount() {
 		this.initializeValueArray();
+		this.initializeParentsArray();
+
 		let rect = new Rectangle();
 		rect.height = 10;
 		rect.width = 15;
@@ -105,6 +122,7 @@ class Grid extends React.Component {
 		console.log(JSON.stringify(this.connections));
 	}
 	render() {
+		console.log(JSON.stringify(this.state.parents));
 		var x = -1;
 		return (
 			<div className="container">
@@ -117,6 +135,7 @@ class Grid extends React.Component {
 						);
 					});
 				})}
+
 				<button
 					className="button btn btn-success btn-block"
 					onClick={this.iterateAndOpenNext}
