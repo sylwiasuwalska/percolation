@@ -3,31 +3,38 @@ import Rectangle from "./Rectangle.js";
 class Grid extends React.Component {
 	constructor() {
 		super();
-		this.state = { values: {}, parents: {} };
-		this.connections = [];
+		this.state = {
+			values: {},
+			message: "Click start to begin",
+			result: "",
+			percolated: false
+		};
+		this.parent = {
+			// {row.column}
+			"-1.-1": "-1.-1", // Virtual top
+			"-2.-2": "-2.-2" // Virtual bottom
+		};
+		this.size = {
+			"-1.-1": 1, // Virtual top
+			"-2.-2": 1 // Virtual bottom
+		};
 		this.finished = false;
+		this.resultRef = React.createRef();
 	}
 
-	initializeValueArray = () => {
-		let newValues = {};
+	initializeArrays = () => {
+		let newValues = this.state.values;
 		for (let i = 0; i < 10; i++) {
 			newValues[i] = {};
 			for (let j = 0; j < 10; j++) {
+				this.parent[`${i}.${j}`] = `${i}.${j}`;
+				this.size[`${i}.${j}`] = 1;
 				newValues[i][j] = 0;
 			}
 		}
-		this.setState({ values: newValues });
-	};
-
-	initializeParentsArray = () => {
-		let newValues = {};
-		for (let i = 0; i < 10; i++) {
-			newValues[i] = {};
-			for (let j = 0; j < 10; j++) {
-				newValues[i][j] = `${i}.${j}`;
-			}
-		}
-		this.setState({ parents: newValues });
+		this.setState({
+			values: newValues
+		});
 	};
 
 	getRandomFromRange = (min, max) => {
@@ -43,11 +50,61 @@ class Grid extends React.Component {
 		}
 		return array;
 	};
+	findRoot = (row, column) => {
+		let rootElement = `${row}.${column}`;
+		while (rootElement != this.parent[rootElement])
+			rootElement = this.parent[rootElement];
+		return rootElement;
+	};
+	union = (rowP, columnP, rowQ, columnQ) => {
+		let rootP = this.findRoot(rowP, columnP);
+		let rootQ = this.findRoot(rowQ, columnQ);
+		if (rootP === rootQ) {
+			return;
+		}
+		if (this.size[rootP] < this.size[rootQ]) {
+			this.parent[rootP] = rootQ;
+			this.size[rootQ] += this.size[rootP];
+		} else {
+			this.parent[rootQ] = rootP;
+			this.size[rootP] += this.size[rootQ];
+		}
+	};
+	unionNeighbours = (row, column) => {
+		if (column > 0) {
+			if (this.state.values[row][column - 1] == 1) {
+				this.union(row, column, row, column - 1);
+			}
+		}
 
+		if (column < 9) {
+			if (this.state.values[row][column + 1] == 1) {
+				this.union(row, column, row, column + 1);
+			}
+		}
+
+		if (row > 0) {
+			if (this.state.values[row - 1][column] == 1) {
+				this.union(row, column, row - 1, column);
+			}
+		}
+
+		if (row < 9) {
+			if (this.state.values[row + 1][column] == 1) {
+				this.union(row, column, row + 1, column);
+			}
+		}
+		if (row == 0) {
+			this.union(row, column, -1, -1);
+		}
+		if (row == 9) {
+			this.union(row, column, -2, -2);
+		}
+	};
 	changeValueOfRandomCell = () => {
-		let rowsKeys = this.shuffleArray(Object.keys(this.state.values));
+		var rowsKeys = this.shuffleArray(Object.keys(this.state.values));
 		for (let i = 0; i < rowsKeys.length; i++) {
-			let rowKey = rowsKeys[i];
+			var rowKey = rowsKeys[i];
 			let cellsOfRow = this.state.values[rowKey];
 			let keysOfClosedCells = Object.keys(cellsOfRow).filter(
 				key => cellsOfRow[key] === 0
@@ -58,90 +115,118 @@ class Grid extends React.Component {
 			}
 			if (keysOfClosedCells.length === 0) continue;
 
-			let randomClosedCell =
+			var randomClosedCell =
 				keysOfClosedCells[
 					this.getRandomFromRange(0, keysOfClosedCells.length - 1)
 				];
 
+			rowKey = parseInt(rowKey);
+			randomClosedCell = parseInt(randomClosedCell);
+
+			this.unionNeighbours(rowKey, randomClosedCell);
+
 			let newStateValues = this.state.values;
-
 			newStateValues[rowKey][randomClosedCell] = 1;
-			//1. Check if neighbours are open
-
-			//2. Change cell's parent if neighbour is opened
 
 			this.setState({ values: newStateValues });
+
 			return;
 		}
 	};
 
-	checkIfOpen = () => {
-		return false;
+	percolates = () => {
+		return this.findRoot(-1, -1) == this.findRoot(-2, -2);
 	};
 
 	checkIfDone = () => {
-		if (this.checkIfOpen() || this.finished) {
-			console.log("Sukces!");
+		if (this.percolates() || this.finished) {
+			this.setState({ message: "Percolates!" });
+			this.calculateResults();
+			this.setState({ percolated: true });
 		} else {
 			setTimeout(
 				function() {
 					this.changeValueOfRandomCell();
 					this.checkIfDone();
 				}.bind(this),
-				200
+				100
 			);
 		}
 	};
+	calculateResults = () => {
+		let totalClosed = 0;
+		let rowsKeys = Object.keys(this.state.values);
+		for (let i = 0; i < rowsKeys.length; i++) {
+			let rowKey = rowsKeys[i];
+			let cellsOfRow = this.state.values[rowKey];
+			totalClosed += Object.keys(cellsOfRow).filter(
+				key => cellsOfRow[key] === 0
+			).length;
+		}
+		let percent = (100 - parseFloat(totalClosed)) / 100;
+		this.setState({ result: `${percent}` });
+		this.resultRef.current.scrollIntoView({ behavior: "smooth" });
+	};
+	checkIfMemberOfPercolation = (row, column) => {
+		if (this.state.percolated == false) return false;
+		let winningParent = this.findRoot(-1, -1);
+		console.log(winningParent);
 
-	iterateAndOpenNext = () => {
-		this.checkIfDone();
+		let test = Object.keys(this.parent).filter(
+			key => this.parent[key] === winningParent
+		);
+		console.log(test);
 	};
 
-	drawSquare = (index, val) => {
+	drawSquare = (row, column, counter, val) => {
+		let ifInPercolatingGroup = this.checkIfMemberOfPercolation(row, column);
 		let color = "#6c5aa6";
 		val === 1 ? (color = "#f36e62") : (color = "#6c5aa6");
 		return (
 			<div
 				className="square"
 				style={{ backgroundColor: color }}
-				key={index}
+				key={counter}
 				isopen={val}
 			>
-				{index}
+				{counter}
 			</div>
 		);
 	};
+	start = () => {
+		this.setState({ message: "In progress" });
+		this.checkIfDone();
+	};
 	componentDidMount() {
-		this.initializeValueArray();
-		this.initializeParentsArray();
-
-		let rect = new Rectangle();
-		rect.height = 10;
-		rect.width = 15;
-		this.connections.push(rect);
-		console.log(JSON.stringify(this.connections));
+		this.initializeArrays();
 	}
+	componentDidUpdate() {}
 	render() {
-		console.log(JSON.stringify(this.state.parents));
 		var x = -1;
 		return (
 			<div className="container">
-				{Object.keys(this.state.values).map(key => {
-					return Object.keys(this.state.values[key]).map(rowKey => {
-						x++;
-						return this.drawSquare(
-							x,
-							this.state.values[key][rowKey]
-						);
-					});
+				<div>{this.state.message}</div>
+				{Object.keys(this.state.values).map(rowKey => {
+					return Object.keys(this.state.values[rowKey]).map(
+						columnKey => {
+							x++;
+							return this.drawSquare(
+								rowKey,
+								columnKey,
+								x,
+								this.state.values[rowKey][columnKey]
+							);
+						}
+					);
 				})}
 
 				<button
 					className="button btn btn-success btn-block"
-					onClick={this.iterateAndOpenNext}
+					onClick={this.start}
 				>
 					Start
 				</button>
+				<div ref={this.resultRef}>{this.state.result}</div>
 			</div>
 		);
 	}
