@@ -10,7 +10,7 @@ class Grid extends React.Component {
 			message: "To estimate percolation threshold click 'Start':",
 			result: "Percolation threshold will be shown here.",
 			percolated: false,
-			isInProgres: "active",
+			isInProgres: "",
 			countToRefresh: false
 		};
 		this.parent = {
@@ -134,7 +134,7 @@ class Grid extends React.Component {
 			this.setState({ message: "It percolates!" });
 			this.calculateResults();
 			this.setState({ percolated: true });
-			this.setState({ isInProgres: "active" });
+			this.setState({ isInProgres: "" });
 
 			this.setState({ countToRefresh: true });
 		} else {
@@ -229,6 +229,7 @@ class Grid extends React.Component {
 					<button
 						className={`button btn btn-primary btn-block ${this.state.isInProgres}`}
 						onClick={this.start}
+						disabled={this.state.isInProgres}
 					>
 						Start
 					</button>
