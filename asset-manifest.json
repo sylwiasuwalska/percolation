@@ -1,5 +1,5 @@
 {
-  "main.css": "/percolation/static/css/main.4a50a856.chunk.css",
+  "main.css": "/percolation/static/css/main.098b29e3.chunk.css",
   "main.js": "/percolation/static/js/main.0fe34fff.chunk.js",
   "main.js.map": "/percolation/static/js/main.0fe34fff.chunk.js.map",
   "runtime~main.js": "/percolation/static/js/runtime~main.8a7ea95c.js",
@@ -7,9 +7,9 @@
   "static/js/2.186de82c.chunk.js": "/percolation/static/js/2.186de82c.chunk.js",
   "static/js/2.186de82c.chunk.js.map": "/percolation/static/js/2.186de82c.chunk.js.map",
   "index.html": "/percolation/index.html",
-  "precache-manifest.fb18749668fc836ff611b5e4df047177.js": "/percolation/precache-manifest.fb18749668fc836ff611b5e4df047177.js",
+  "precache-manifest.e627ea705cf3183cfc4bd76ae3030de1.js": "/percolation/precache-manifest.e627ea705cf3183cfc4bd76ae3030de1.js",
   "service-worker.js": "/percolation/service-worker.js",
-  "static/css/main.4a50a856.chunk.css.map": "/percolation/static/css/main.4a50a856.chunk.css.map",
+  "static/css/main.098b29e3.chunk.css.map": "/percolation/static/css/main.098b29e3.chunk.css.map",
   "static/media/percolatesno.jpg": "/percolation/static/media/percolatesno.e7e73a4e.jpg",
   "static/media/percolatesyes.jpg": "/percolation/static/media/percolatesyes.2debb7f7.jpg"
 }

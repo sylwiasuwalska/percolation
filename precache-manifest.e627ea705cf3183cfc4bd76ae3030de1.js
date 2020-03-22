@@ -1,10 +1,10 @@
 self.__precacheManifest = [
   {
-    "revision": "b6aeaf72bb0374766dc3",
-    "url": "/percolation/static/css/main.4a50a856.chunk.css"
+    "revision": "f758bbcbc92290d4467b",
+    "url": "/percolation/static/css/main.098b29e3.chunk.css"
   },
   {
-    "revision": "b6aeaf72bb0374766dc3",
+    "revision": "f758bbcbc92290d4467b",
     "url": "/percolation/static/js/main.0fe34fff.chunk.js"
   },
   {
@@ -24,7 +24,7 @@ self.__precacheManifest = [
     "url": "/percolation/static/media/percolatesno.e7e73a4e.jpg"
   },
   {
-    "revision": "462ca7f8dd1a8edfe247a83c28de260a",
+    "revision": "46f1675adc7aeceb1d4c4c2057973968",
     "url": "/percolation/index.html"
   }
 ];
