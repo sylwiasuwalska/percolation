@@ -170,10 +170,10 @@ class Grid extends React.Component {
 
 	drawSquare = (row, column, counter, val) => {
 		this.checkIfMemberOfPercolation(row, column);
-		let color = "#6c5aa6";
-		val === 1 ? (color = "#f36e62") : (color = "#6c5aa6");
+		let color = "#000";
+		val === 1 ? (color = "#fff") : (color = "#000");
 		if (this.findRoot(row, column) == this.findRoot(-1, -1)) {
-			color = "#ffc101";
+			color = "#008fe6";
 		}
 		return (
 			<div
@@ -218,7 +218,7 @@ class Grid extends React.Component {
 					})}
 					<h2>{this.state.message}</h2>
 					<button
-						className={`button btn btn-success btn-block ${this.state.isInProgres}`}
+						className={`button btn btn-primary btn-block ${this.state.isInProgres}`}
 						onClick={this.start}
 					>
 						Start

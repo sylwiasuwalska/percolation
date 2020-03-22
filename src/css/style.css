@@ -43,6 +43,11 @@ body {
 .desc {
 	margin: 2%;
 	width: 100%;
+	text-justify: inter-word;
+}
+
+.desc a {
+	word-break: break-all;
 }
 
 .desc p {
