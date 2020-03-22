@@ -42,7 +42,7 @@ class Grid extends React.Component {
 
 	findRoot = (row, column) => {
 		let rootElement = `${row}.${column}`;
-		while (rootElement != this.parent[rootElement])
+		while (rootElement !== this.parent[rootElement])
 			rootElement = this.parent[rootElement];
 		return rootElement;
 	};
@@ -62,32 +62,32 @@ class Grid extends React.Component {
 	};
 	unionNeighbours = (row, column) => {
 		if (column > 0) {
-			if (this.state.values[row][column - 1] == 1) {
+			if (this.state.values[row][column - 1] === 1) {
 				this.union(row, column, row, column - 1);
 			}
 		}
 
 		if (column < 9) {
-			if (this.state.values[row][column + 1] == 1) {
+			if (this.state.values[row][column + 1] === 1) {
 				this.union(row, column, row, column + 1);
 			}
 		}
 
 		if (row > 0) {
-			if (this.state.values[row - 1][column] == 1) {
+			if (this.state.values[row - 1][column] === 1) {
 				this.union(row, column, row - 1, column);
 			}
 		}
 
 		if (row < 9) {
-			if (this.state.values[row + 1][column] == 1) {
+			if (this.state.values[row + 1][column] === 1) {
 				this.union(row, column, row + 1, column);
 			}
 		}
-		if (row == 0) {
+		if (row === 0) {
 			this.union(row, column, -1, -1);
 		}
-		if (row == 9) {
+		if (row === 9) {
 			this.union(row, column, -2, -2);
 		}
 	};
@@ -126,7 +126,7 @@ class Grid extends React.Component {
 	};
 
 	percolates = () => {
-		return this.findRoot(-1, -1) == this.findRoot(-2, -2);
+		return this.findRoot(-1, -1) === this.findRoot(-2, -2);
 	};
 
 	checkIfDone = () => {
@@ -161,21 +161,19 @@ class Grid extends React.Component {
 		this.setState({ result: `Percolation threshold is ${percent}` });
 	};
 	checkIfMemberOfPercolation = (row, column) => {
-		if (this.state.percolated == false) return false;
+		if (this.state.percolated === false) return false;
 		let winningParent = this.findRoot(-1, -1);
-		console.log(winningParent);
 
-		let test = Object.keys(this.parent).filter(
+		Object.keys(this.parent).filter(
 			key => this.parent[key] === winningParent
 		);
-		console.log(test);
 	};
 
 	drawSquare = (row, column, counter, val) => {
 		this.checkIfMemberOfPercolation(row, column);
 		let color = "#000";
 		val === 1 ? (color = "#fff") : (color = "#000");
-		if (this.findRoot(row, column) == this.findRoot(-1, -1)) {
+		if (this.findRoot(row, column) === this.findRoot(-1, -1)) {
 			color = "#008fe6";
 		}
 		return (
