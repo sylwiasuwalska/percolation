@@ -9,7 +9,8 @@ class Grid extends React.Component {
 			values: {},
 			message: "To estimate percolation threshold click 'Start':",
 			result: "Percolation threshold will be shown here.",
-			percolated: false
+			percolated: false,
+			isInProgres: "active"
 		};
 		this.parent = {
 			// {row.column}
@@ -89,6 +90,7 @@ class Grid extends React.Component {
 			this.union(row, column, -2, -2);
 		}
 	};
+
 	changeValueOfRandomCell = () => {
 		var rowsKeys = shuffleArray(Object.keys(this.state.values));
 		for (let i = 0; i < rowsKeys.length; i++) {
@@ -131,6 +133,7 @@ class Grid extends React.Component {
 			this.setState({ message: "It percolates!" });
 			this.calculateResults();
 			this.setState({ percolated: true });
+			this.setState({ isInProgres: "active" });
 		} else {
 			setTimeout(
 				function() {
@@ -169,6 +172,9 @@ class Grid extends React.Component {
 		this.checkIfMemberOfPercolation(row, column);
 		let color = "#6c5aa6";
 		val === 1 ? (color = "#f36e62") : (color = "#6c5aa6");
+		if (this.findRoot(row, column) == this.findRoot(-1, -1)) {
+			color = "#ffc101";
+		}
 		return (
 			<div
 				className="square"
@@ -182,6 +188,7 @@ class Grid extends React.Component {
 	};
 	start = () => {
 		this.setState({ message: "In progress..." });
+		this.setState({ isInProgres: "disabled" });
 		this.checkIfDone();
 	};
 	componentDidMount() {
@@ -211,7 +218,7 @@ class Grid extends React.Component {
 					})}
 					<h2>{this.state.message}</h2>
 					<button
-						className="button btn btn-success btn-block"
+						className={`button btn btn-success btn-block ${this.state.isInProgres}`}
 						onClick={this.start}
 					>
 						Start
