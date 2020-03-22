@@ -1,12 +1,14 @@
 import React from "react";
-import Rectangle from "./Rectangle.js";
+import Results from "./Results.js";
+import { getRandomFromRange, shuffleArray } from "./helpers.js";
+
 class Grid extends React.Component {
 	constructor() {
 		super();
 		this.state = {
 			values: {},
-			message: "Click start to begin",
-			result: "",
+			message: "To estimate percolation threshold click 'Start':",
+			result: "...",
 			percolated: false
 		};
 		this.parent = {
@@ -19,7 +21,6 @@ class Grid extends React.Component {
 			"-2.-2": 1 // Virtual bottom
 		};
 		this.finished = false;
-		this.resultRef = React.createRef();
 	}
 
 	initializeArrays = () => {
@@ -37,19 +38,6 @@ class Grid extends React.Component {
 		});
 	};
 
-	getRandomFromRange = (min, max) => {
-		return Math.round(Math.random() * (max - min) + min);
-	};
-
-	shuffleArray = array => {
-		for (var i = array.length - 1; i > 0; i--) {
-			var j = Math.floor(Math.random() * (i + 1));
-			var temp = array[i];
-			array[i] = array[j];
-			array[j] = temp;
-		}
-		return array;
-	};
 	findRoot = (row, column) => {
 		let rootElement = `${row}.${column}`;
 		while (rootElement != this.parent[rootElement])
@@ -102,7 +90,7 @@ class Grid extends React.Component {
 		}
 	};
 	changeValueOfRandomCell = () => {
-		var rowsKeys = this.shuffleArray(Object.keys(this.state.values));
+		var rowsKeys = shuffleArray(Object.keys(this.state.values));
 		for (let i = 0; i < rowsKeys.length; i++) {
 			var rowKey = rowsKeys[i];
 			let cellsOfRow = this.state.values[rowKey];
@@ -117,7 +105,7 @@ class Grid extends React.Component {
 
 			var randomClosedCell =
 				keysOfClosedCells[
-					this.getRandomFromRange(0, keysOfClosedCells.length - 1)
+					getRandomFromRange(0, keysOfClosedCells.length - 1)
 				];
 
 			rowKey = parseInt(rowKey);
@@ -140,7 +128,7 @@ class Grid extends React.Component {
 
 	checkIfDone = () => {
 		if (this.percolates() || this.finished) {
-			this.setState({ message: "Percolates!" });
+			this.setState({ message: "It percolates!" });
 			this.calculateResults();
 			this.setState({ percolated: true });
 		} else {
@@ -165,7 +153,6 @@ class Grid extends React.Component {
 		}
 		let percent = (100 - parseFloat(totalClosed)) / 100;
 		this.setState({ result: `${percent}` });
-		this.resultRef.current.scrollIntoView({ behavior: "smooth" });
 	};
 	checkIfMemberOfPercolation = (row, column) => {
 		if (this.state.percolated == false) return false;
@@ -189,12 +176,12 @@ class Grid extends React.Component {
 				key={counter}
 				isopen={val}
 			>
-				{counter}
+				<p>{counter}</p>
 			</div>
 		);
 	};
 	start = () => {
-		this.setState({ message: "In progress" });
+		this.setState({ message: "In progress..." });
 		this.checkIfDone();
 	};
 	componentDidMount() {
@@ -204,29 +191,32 @@ class Grid extends React.Component {
 	render() {
 		var x = -1;
 		return (
-			<div className="container">
-				<div>{this.state.message}</div>
-				{Object.keys(this.state.values).map(rowKey => {
-					return Object.keys(this.state.values[rowKey]).map(
-						columnKey => {
-							x++;
-							return this.drawSquare(
-								rowKey,
-								columnKey,
-								x,
-								this.state.values[rowKey][columnKey]
-							);
-						}
-					);
-				})}
-
-				<button
-					className="button btn btn-success btn-block"
-					onClick={this.start}
-				>
-					Start
-				</button>
-				<div ref={this.resultRef}>{this.state.result}</div>
+			<div>
+				<div className="container-results">
+					<Results result={this.state.result} />
+				</div>
+				<div className="container-grid">
+					<h2>{this.state.message}</h2>
+					{Object.keys(this.state.values).map(rowKey => {
+						return Object.keys(this.state.values[rowKey]).map(
+							columnKey => {
+								x++;
+								return this.drawSquare(
+									rowKey,
+									columnKey,
+									x,
+									this.state.values[rowKey][columnKey]
+								);
+							}
+						);
+					})}
+					<button
+						className="button btn btn-success btn-block"
+						onClick={this.start}
+					>
+						Start
+					</button>
+				</div>
 			</div>
 		);
 	}

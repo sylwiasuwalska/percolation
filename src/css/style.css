@@ -1,13 +1,17 @@
 body {
-	margin: 0 auto;
+	margin: 1% auto;
+	font-family: "Roboto", sans-serif;
+	text-align: center;
 }
 
-.container {
+.header {
+	margin-bottom: 3%;
+}
+
+.container-grid {
 	margin: 0 auto;
 	padding: 0;
-	width: 600px;
-	height: 600px;
-	text-align: center;
+	width: 60%;
 }
 
 .square {
@@ -16,9 +20,37 @@ body {
 	padding-bottom: 0;
 	margin: 0;
 	width: 10%;
-	height: 10%;
+	min-height: 20%;
+	text-align: center;
+}
+.square p {
+	margin: auto;
 }
 
 .button {
-	margin-top: 5%;
+	margin-top: 2%;
+}
+
+.container-results {
+	border: 1px solid red;
+	margin: 0 auto;
+	padding: 2%;
+	width: 90%;
+	display: flex;
+	justify-content: flex-start;
+}
+
+.desc {
+	margin: 2%;
+	width: 65%;
+}
+
+.desc p {
+	text-align: justify;
+}
+
+.threshold {
+	margin: 2%;
+	border: 1px solid blue;
+	width: 35%;
 }
