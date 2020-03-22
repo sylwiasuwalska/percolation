@@ -1,11 +1,12 @@
 import React from "react";
+import percolateyes from "../img/percolatesyes.jpg";
+import percolateno from "../img/percolatesno.jpg";
 
 class Results extends React.Component {
 	render() {
 		return (
 			<React.Fragment>
 				<div className="desc">
-					<h2>Monte Carlo simulation.</h2>
 					<p>
 						We model a percolation system using an n-by-n grid of
 						sites. Each site is either open or blocked. A full site
@@ -24,6 +25,16 @@ class Results extends React.Component {
 						might flow, so that a system that percolates lets water
 						fill open sites, flowing from top to bottom.)
 					</p>
+					<img
+						src={percolateyes}
+						alt="System percolates"
+						height="250"
+					/>
+					<img
+						src={percolateno}
+						alt="System percolates"
+						height="250"
+					/>
 					<p>
 						To estimate the percolation threshold, consider the
 						following computational experiment:
@@ -40,12 +51,7 @@ class Results extends React.Component {
 						percolates provides an estimate of the percolation
 						threshold.
 					</p>
-					<img
-						src="./img/percolates-yes"
-						alt="System percolates"
-						height="42"
-						width="42"
-					/>
+
 					<p>
 						Source:{" "}
 						<a href="https://coursera.cs.princeton.edu/algs4/assignments/percolation/specification.php">
@@ -54,8 +60,7 @@ class Results extends React.Component {
 					</p>
 				</div>
 				<div className="threshold">
-					<h2>Percolation threshold will be shown here:</h2>
-					<p>{this.props.result}</p>
+					<h2>{this.props.result}</h2>
 				</div>
 			</React.Fragment>
 		);

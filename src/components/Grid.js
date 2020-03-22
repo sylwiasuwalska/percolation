@@ -8,7 +8,7 @@ class Grid extends React.Component {
 		this.state = {
 			values: {},
 			message: "To estimate percolation threshold click 'Start':",
-			result: "...",
+			result: "Percolation threshold will be shown here.",
 			percolated: false
 		};
 		this.parent = {
@@ -137,7 +137,7 @@ class Grid extends React.Component {
 					this.changeValueOfRandomCell();
 					this.checkIfDone();
 				}.bind(this),
-				100
+				80
 			);
 		}
 	};
@@ -152,7 +152,7 @@ class Grid extends React.Component {
 			).length;
 		}
 		let percent = (100 - parseFloat(totalClosed)) / 100;
-		this.setState({ result: `${percent}` });
+		this.setState({ result: `Percolation threshold is ${percent}` });
 	};
 	checkIfMemberOfPercolation = (row, column) => {
 		if (this.state.percolated == false) return false;
@@ -166,7 +166,7 @@ class Grid extends React.Component {
 	};
 
 	drawSquare = (row, column, counter, val) => {
-		let ifInPercolatingGroup = this.checkIfMemberOfPercolation(row, column);
+		this.checkIfMemberOfPercolation(row, column);
 		let color = "#6c5aa6";
 		val === 1 ? (color = "#f36e62") : (color = "#6c5aa6");
 		return (
@@ -196,7 +196,6 @@ class Grid extends React.Component {
 					<Results result={this.state.result} />
 				</div>
 				<div className="container-grid">
-					<h2>{this.state.message}</h2>
 					{Object.keys(this.state.values).map(rowKey => {
 						return Object.keys(this.state.values[rowKey]).map(
 							columnKey => {
@@ -210,6 +209,7 @@ class Grid extends React.Component {
 							}
 						);
 					})}
+					<h2>{this.state.message}</h2>
 					<button
 						className="button btn btn-success btn-block"
 						onClick={this.start}
