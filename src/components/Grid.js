@@ -10,7 +10,8 @@ class Grid extends React.Component {
 			message: "To estimate percolation threshold click 'Start':",
 			result: "Percolation threshold will be shown here.",
 			percolated: false,
-			isInProgres: "active"
+			isInProgres: "active",
+			countToRefresh: false
 		};
 		this.parent = {
 			// {row.column}
@@ -134,6 +135,8 @@ class Grid extends React.Component {
 			this.calculateResults();
 			this.setState({ percolated: true });
 			this.setState({ isInProgres: "active" });
+
+			this.setState({ countToRefresh: true });
 		} else {
 			setTimeout(
 				function() {
@@ -189,7 +192,13 @@ class Grid extends React.Component {
 	start = () => {
 		this.setState({ message: "In progress..." });
 		this.setState({ isInProgres: "disabled" });
-		this.checkIfDone();
+
+		if (!this.state.countToRefresh) {
+			this.checkIfDone();
+		} else {
+			this.initializeArrays();
+			this.checkIfDone();
+		}
 	};
 	componentDidMount() {
 		this.initializeArrays();
